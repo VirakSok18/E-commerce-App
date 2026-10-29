@@ -1,10 +1,8 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'auth_service.dart';
+import 'mock_data.dart';
 
 class ProductService {
-  static const String baseUrl = 'http://192.168.100.46:5000';
+  static const String baseUrl = 'http://localhost:5000';
 
   // CREATE PRODUCT
   static Future<Map<String, dynamic>> createProduct({
@@ -16,124 +14,69 @@ class ProductService {
     required XFile productImage,
   }) async {
     try {
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse('$baseUrl/api/products/create'),
-      );
+      final newId = (100 + MockData.products.length + 1).toString();
+      final newProduct = {
+        'product_id': newId,
+        'user_id': MockData.user['user_id'] ?? 1,
+        'owner_id': MockData.user['user_id'] ?? 1,
+        'shop_name': MockData.user['shop_name'] ?? 'Aura Streetwear',
+        'shop_picture': MockData.user['shop_picture'] ?? 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=400&q=80',
+        'product_name': productName,
+        'price': price,
+        'stock': stock ?? 10,
+        'category': category,
+        'description': description ?? 'New premium arrival available in store.',
+        'product_image': 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80',
+        'is_deleted': 0,
+        'created_at': DateTime.now().toIso8601String(),
+      };
 
-      final accessToken = AuthService.getAccessToken();
-      if (accessToken != null) {
-        request.headers['Authorization'] = 'Bearer $accessToken';
-      }
+      MockData.products.insert(0, newProduct);
 
-      request.fields['product_name'] = productName;
-      request.fields['price'] = price.toString();
-      request.fields['category'] = category;
-      if (description != null) request.fields['description'] = description;
-      if (stock != null) request.fields['stock'] = stock.toString();
-
-      request.files.add(
-        await http.MultipartFile.fromPath('product_image', productImage.path),
-      );
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 401) {
-        final refreshed = await AuthService.refreshAccessToken();
-        if (refreshed) {
-          request.headers['Authorization'] = 'Bearer ${AuthService.getAccessToken()}';
-          streamedResponse = await request.send();
-          response = await http.Response.fromStream(streamedResponse);
-        }
-      }
-
-      final data = jsonDecode(response.body);
-
-      if (response.statusCode == 201) {
-        return {'success': true, 'data': data};
-      } else {
-        return {'success': false, 'message': data['message'] ?? 'Failed to create product'};
-      }
+      return {
+        'success': true,
+        'data': {'productId': newId, 'message': 'Product created successfully'}
+      };
     } catch (e) {
-      return {'success': false, 'message': 'Network error: $e'};
+      return {'success': false, 'message': 'Failed to create product: $e'};
     }
   }
 
   // GET MY PRODUCTS
   static Future<Map<String, dynamic>> getMyProducts() async {
-    try {
-      final response = await AuthService.authenticatedRequest(
-        method: 'GET',
-        endpoint: '/api/products/my-products',
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return {'success': true, 'products': data};
-      } else {
-        final data = jsonDecode(response.body);
-        return {'success': false, 'message': data['message'] ?? 'Failed to fetch products'};
-      }
-    } catch (e) {
-      return {'success': false, 'message': 'Network error: $e'};
-    }
+    final myUserId = MockData.user['user_id'] ?? 1;
+    final myProducts = MockData.products
+        .where((p) => p['user_id'] == myUserId && p['is_deleted'] == 0)
+        .toList();
+    return {'success': true, 'products': myProducts};
   }
 
   // GET ALL PRODUCTS
   static Future<Map<String, dynamic>> getAllProducts() async {
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/api/products/all'),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return {'success': true, 'products': data};
-      } else {
-        final data = jsonDecode(response.body);
-        return {'success': false, 'message': data['message'] ?? 'Failed to fetch products'};
-      }
-    } catch (e) {
-      return {'success': false, 'message': 'Network error: $e'};
-    }
+    final active = MockData.products.where((p) => p['is_deleted'] == 0).toList();
+    return {'success': true, 'products': active};
   }
 
   // GET PRODUCTS BY CATEGORY
   static Future<Map<String, dynamic>> getProductsByCategory(String category) async {
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/api/products/category/$category'),
-      );
-
-      if (response.statusCode == 200) {
-        final products = jsonDecode(response.body) as List;
-        return {'success': true, 'products': products};
-      } else {
-        return {'success': false, 'message': 'Failed to load products'};
-      }
-    } catch (e) {
-      return {'success': false, 'message': 'Error: $e'};
+    if (category.toLowerCase() == 'all') {
+      return getAllProducts();
     }
+    final filtered = MockData.products
+        .where((p) =>
+            p['is_deleted'] == 0 &&
+            p['category'].toString().toLowerCase() == category.toLowerCase())
+        .toList();
+    return {'success': true, 'products': filtered};
   }
 
   // GET PRODUCT BY ID
   static Future<Map<String, dynamic>> getProductById(String productId) async {
-    try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/api/products/$productId'),
-      );
-
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return {'success': true, 'product': data};
-      } else {
-        final data = jsonDecode(response.body);
-        return {'success': false, 'message': data['message'] ?? 'Failed to fetch product'};
-      }
-    } catch (e) {
-      return {'success': false, 'message': 'Network error: $e'};
-    }
+    final found = MockData.products.firstWhere(
+      (p) => p['product_id'].toString() == productId.toString(),
+      orElse: () => MockData.products.first,
+    );
+    return {'success': true, 'product': found};
   }
 
   // UPDATE PRODUCT
@@ -146,70 +89,24 @@ class ProductService {
     int? stock,
     XFile? productImage,
   }) async {
-    try {
-      var request = http.MultipartRequest(
-        'PUT',
-        Uri.parse('$baseUrl/api/products/update/$productId'),
-      );
-
-      final accessToken = AuthService.getAccessToken();
-      if (accessToken != null) {
-        request.headers['Authorization'] = 'Bearer $accessToken';
+    for (var i = 0; i < MockData.products.length; i++) {
+      if (MockData.products[i]['product_id'].toString() == productId.toString()) {
+        if (productName != null) MockData.products[i]['product_name'] = productName;
+        if (price != null) MockData.products[i]['price'] = price;
+        if (category != null) MockData.products[i]['category'] = category;
+        if (description != null) MockData.products[i]['description'] = description;
+        if (stock != null) MockData.products[i]['stock'] = stock;
+        return {'success': true, 'data': MockData.products[i]};
       }
-
-      if (productName != null) request.fields['product_name'] = productName;
-      if (price != null) request.fields['price'] = price.toString();
-      if (category != null) request.fields['category'] = category;
-      if (description != null) request.fields['description'] = description;
-      if (stock != null) request.fields['stock'] = stock.toString();
-
-      if (productImage != null) {
-        request.files.add(
-          await http.MultipartFile.fromPath('product_image', productImage.path),
-        );
-      }
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
-
-      if (response.statusCode == 401) {
-        final refreshed = await AuthService.refreshAccessToken();
-        if (refreshed) {
-          request.headers['Authorization'] = 'Bearer ${AuthService.getAccessToken()}';
-          streamedResponse = await request.send();
-          response = await http.Response.fromStream(streamedResponse);
-        }
-      }
-
-      final data = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        return {'success': true, 'data': data};
-      } else {
-        return {'success': false, 'message': data['message'] ?? 'Failed to update product'};
-      }
-    } catch (e) {
-      return {'success': false, 'message': 'Network error: $e'};
     }
+    return {'success': false, 'message': 'Product not found'};
   }
 
   // DELETE PRODUCT
   static Future<Map<String, dynamic>> deleteProduct(String productId) async {
-    try {
-      final response = await AuthService.authenticatedRequest(
-        method: 'DELETE',
-        endpoint: '/api/products/delete/$productId',
-      );
-
-      final data = jsonDecode(response.body);
-
-      if (response.statusCode == 200) {
-        return {'success': true, 'message': data['message']};
-      } else {
-        return {'success': false, 'message': data['message'] ?? 'Failed to delete product'};
-      }
-    } catch (e) {
-      return {'success': false, 'message': 'Network error: $e'};
-    }
+    MockData.products.removeWhere(
+      (p) => p['product_id'].toString() == productId.toString(),
+    );
+    return {'success': true, 'message': 'Product deleted successfully'};
   }
 }
