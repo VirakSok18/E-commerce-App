@@ -3,6 +3,7 @@ import '../services/product_service.dart';
 import '../services/order_service.dart';
 import '../services/auth_service.dart';
 import 'shop_page.dart';
+import '../widgets/night_market_logo.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback? onNavigateToCart;
@@ -793,33 +794,10 @@ void _onPromoBannerTap(String promoType) {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // Logo
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            'https://res.cloudinary.com/dby0dkagu/image/upload/v1759822956/logo_glbb61.png',
-                            height: 50,
-                            width: 160,
-                            fit: BoxFit.contain,
-                            errorBuilder: (context, error, stack) => Container(
-                              height: 50,
-                              width: 80,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFFF6B35).withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  'ShopApp',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFFFF6B35),
-                                    letterSpacing: 1,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                        const NightMarketLogoWidget(
+                          size: 38,
+                          showText: true,
+                          darkText: true,
                         ),
 
                         // Cart Icon with Badge

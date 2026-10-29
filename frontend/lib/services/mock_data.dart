@@ -5,14 +5,14 @@ class MockData {
     'email': 'virak.sok@example.com',
     'phone': '+855 12 345 678',
     'has_shop': 1,
-    'shop_name': 'Aura Streetwear',
+    'shop_name': 'Night Market',
     'shop_picture': 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=400&q=80',
     'profile_picture': 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80',
   };
 
   static List<Map<String, dynamic>> shops = [
     {
-      'shop_name': 'Aura Streetwear',
+      'shop_name': 'Night Market',
       'owner_id': 1,
       'owner_picture': 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=400&q=80',
       'product_count': 4,
@@ -36,7 +36,7 @@ class MockData {
       'product_id': '101',
       'user_id': 1,
       'owner_id': 1,
-      'shop_name': 'Aura Streetwear',
+      'shop_name': 'Night Market',
       'shop_picture': 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=400&q=80',
       'product_name': 'Nike Air Jordan 1 Retro High',
       'price': 185.00,
@@ -66,7 +66,7 @@ class MockData {
       'product_id': '103',
       'user_id': 1,
       'owner_id': 1,
-      'shop_name': 'Aura Streetwear',
+      'shop_name': 'Night Market',
       'shop_picture': 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=400&q=80',
       'product_name': 'Oversized Washed Heavyweight Hoodie',
       'price': 68.00,
@@ -126,7 +126,7 @@ class MockData {
       'product_id': '107',
       'user_id': 1,
       'owner_id': 1,
-      'shop_name': 'Aura Streetwear',
+      'shop_name': 'Night Market',
       'shop_picture': 'https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?w=400&q=80',
       'product_name': 'Everyday Waterproof Commuter Backpack',
       'price': 89.00,

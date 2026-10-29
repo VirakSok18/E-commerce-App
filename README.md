@@ -1,6 +1,6 @@
-# AURA — Mobile E-Commerce Platform
+# Night Market — Mobile E-Commerce Platform
 
-A high-performance, standalone mobile e-commerce platform built with Flutter, complemented by a modern web showcase ready for Vercel deployment.
+A high-performance, standalone mobile e-commerce platform built with Flutter, complemented by a modern web showcase and direct APK download portal.
 
 ---
 
@@ -8,7 +8,7 @@ A high-performance, standalone mobile e-commerce platform built with Flutter, co
 
 The platform features an interactive mobile shopping experience with client-side state persistence:
 - **Standalone Mobile Application (Flutter)**: Runs completely decoupled from external databases with simulated local catalog, cart, orders, and vendor storefront management.
-- **Web Showcase Platform (React + Vite + Tailwind CSS)**: Minimalist product showcase with interactive cart calculations, UI screenshot walkthroughs, and direct Android APK distribution.
+- **Web Showcase Platform (React + Vite + Tailwind CSS)**: Clean, high-performance landing page designed for direct APK downloads, UI screenshot walkthroughs, and core feature specifications.
 
 ---
 
@@ -29,10 +29,11 @@ The platform features an interactive mobile shopping experience with client-side
 │   ├── lib/
 │   │   ├── screens/     # Application UI views (Home, Cart, Shop, Profile, Orders)
 │   │   ├── services/    # Client-side state store and mock service layer
+│   │   ├── widgets/     # In-app brand components (NightMarketLogoWidget)
 │   │   └── main.dart    # Mobile entry point
 ├── web/                 # React + Vite web showcase platform
-│   ├── src/             # Interactive catalog, cart drawer, and screenshot gallery
-│   └── public/          # Compiled Android APK (ecommerce.apk) and assets
+│   ├── src/             # Direct APK download landing page & screenshot gallery
+│   └── public/          # Compiled Android APK (nightmarket.apk / ecommerce.apk)
 ├── vercel.json          # Vercel deployment configuration
 └── package.json         # Root orchestration build script
 ```
@@ -48,15 +49,24 @@ flutter pub get
 flutter run
 ```
 
-### Web Showcase (Vercel Ready)
+### Web Showcase (React + Vite)
 ```bash
 cd web
 npm install
 npm run dev
 ```
 
-### Building Release APK
+---
+
+## Production Build
+
+### Flutter Release APK
 ```bash
 cd frontend
 flutter build apk --release --target-platform android-arm64
+```
+
+### Web Production Bundle
+```bash
+npm run build
 ```

@@ -1,8 +1,8 @@
 {
-  "name": "aura-ecommerce-showcase",
+  "name": "night-market-app",
   "version": "1.0.0",
   "private": true,
-  "description": "Aura Mobile E-Commerce Standalone Platform & Showcase",
+  "description": "Night Market — Mobile E-Commerce App & APK Showcase",
   "scripts": {
     "build": "npm --prefix web install && npm --prefix web run build && node -e \"const fs=require('fs'); if(fs.existsSync('web/dist')){fs.cpSync('web/dist', 'dist', {recursive:true});}\""
   }

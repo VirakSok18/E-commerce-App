@@ -11,7 +11,7 @@ export default function NightMarketLogo({ size = 36, className = '' }) {
       className={className}
     >
       <title>Night Market Logo</title>
-      <rect width="100" height="100" rx="24" fill="#2C3E50" />
+      <rect width="100" height="100" rx="26" fill="#0F172A" />
       <path
         d="M50 20C40 20 33 27 33 37V40H67V37C67 27 60 20 50 20ZM50 26C55.5 26 60.5 30.5 61 36.5C59 34 55 32 50 32C45 32 41 34 39 36.5C39.5 30.5 44.5 26 50 26Z"
         fill="#FF8C42"
