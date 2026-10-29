@@ -154,30 +154,7 @@ class MockData {
     },
   ];
 
-  static List<Map<String, dynamic>> cart = [
-    {
-      'cart_id': 'c_1',
-      'id': 'c_1',
-      'product_id': '101',
-      'product_name': 'Nike Air Jordan 1 Retro High',
-      'price': 185.00,
-      'quantity': 1,
-      'stock': 14,
-      'product_image': 'https://images.unsplash.com/photo-1552346154-21d32810aba3?w=600&q=80',
-      'shop_name': 'Aura Streetwear',
-    },
-    {
-      'cart_id': 'c_2',
-      'id': 'c_2',
-      'product_id': '105',
-      'product_name': 'Ceramic Matte Pour-Over Coffee Mug',
-      'price': 24.00,
-      'quantity': 2,
-      'stock': 40,
-      'product_image': 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80',
-      'shop_name': 'Nordic Living',
-    },
-  ];
+  static List<Map<String, dynamic>> cart = [];
 
   static List<Map<String, dynamic>> orders = [
     {
