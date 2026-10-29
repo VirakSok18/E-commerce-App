@@ -4,6 +4,6 @@
   "private": true,
   "description": "Aura Mobile E-Commerce Standalone Platform & Showcase",
   "scripts": {
-    "build": "npm --prefix web install && npm --prefix web run build"
+    "build": "npm --prefix web install && npm --prefix web run build && node -e \"const fs=require('fs'); if(fs.existsSync('dist')){fs.cpSync('dist', 'web/dist', {recursive:true});}\""
   }
 }
